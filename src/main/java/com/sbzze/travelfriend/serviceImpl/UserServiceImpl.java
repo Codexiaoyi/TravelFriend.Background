@@ -1,10 +1,9 @@
 package com.sbzze.travelfriend.serviceImpl;
 
-import com.baomidou.mybatisplus.plugins.Page;
-import com.github.pagehelper.IPage;
 import com.sbzze.travelfriend.entity.User;
 import com.sbzze.travelfriend.mapper.UserMapper;
 import com.sbzze.travelfriend.service.UserService;
+import com.sbzze.travelfriend.util.UUIDUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,33 +11,28 @@ public class UserServiceImpl extends BaseServiceImpl<UserMapper, User> implement
 
     // 增
     @Override
-    public int insertUser(User user) {
+    public int insertUser( String username, String password, String nickname, String signature ) {
+        User user = new User();
+        user.setId(UUIDUtil.getUUID());
+        user.setUsername(username);
+        user.setPassword(password);
+        if (null == nickname) {
+            user.setNickname(username);
+        } else {
+            user.setNickname(nickname);
+        }
+        user.setSignature(signature);
+
         return baseMapper.insert( user );
     }
 
-    // 改
-    @Override
-    public int updateUser(User user) {
-        return baseMapper.updateById( user );
-    }
-
-    // 删
-    @Override
-    public int deleteUser(User user) {
-        return baseMapper.deleteById( user.getId() );
-    }
-
-    //TODO
     // 查
     @Override
-    public User findUserByName( String userName ) {
-        User user = new User();
-        //return baseMapper.getUserByName( userName );
-        return user;
-    }
+    public User findUserByName( String username ) { return baseMapper.findUserByName( username ); }
 
     @Override
-    public IPage getUserPage(Page page, User user) {
-        return null;
+    public User findUserById( String id ) {
+        return baseMapper.findUserById( id );
     }
+
 }
